@@ -1,0 +1,79 @@
+<%- include("../partials/header.ejs", {nav}) %>
+    <div>
+        <script>
+            function seedRandomSource(){
+                const selectElement = document.getElementById("name")
+                const options = selectElement.options;
+                const randomIndex = Math.floor(Math.random() * options.length);
+                selectElement.selectedIndex = randomIndex;
+            }
+
+            function refreshControls() {
+                const selectElement = document.getElementById("name")
+                const selectedOption = selectElement.options[selectElement.selectedIndex];
+
+                if (selectedOption.dataset.showPeriodPicker === "true")
+                    document.getElementById("period-control").classList.add('active');
+                else
+                    document.getElementById("period-control").classList.remove('active');
+
+                if (selectedOption.dataset.showCountryPicker === "true")
+                    document.getElementById("country-control").classList.add('active');
+                else
+                    document.getElementById("country-control").classList.remove('active');
+            }
+
+            function handleHtmx() {
+                const selectElement = document.getElementById("name")
+                const name = selectElement.value
+                const source = selectElement.options[selectElement.selectedIndex].dataset.source;
+
+                let period = document.querySelector('#period-control.active')?.value
+                let country = document.querySelector('#country-control.active')?.value
+
+                document.getElementById('content')
+                    .setAttribute('hx-get',
+                     `/movie/list/${source}?name=${name}&period=${period}&country=${country}`)
+
+                htmx.process(document.getElementById('content'))
+                htmx.trigger('#content', 'load')
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                seedRandomSource();
+                refreshControls();
+                handleHtmx();
+            });
+        </script>
+
+        <div class="selectors">
+            <div class="dropdown">
+                <select onchange="refreshControls();handleHtmx()" id="name" name="name">
+                    <% for( let index=0; index < dropDownList.length; index++ ) { %>
+                        <option data-source="<%= dropDownList[index].source %>"
+                            data-show-country-picker="<%= dropDownList[index].showCountryPicker ?? "false"%>"
+                            data-show-period-picker="<%= dropDownList[index].showPeriodPicker ?? "false"%>"
+                            value="<%= dropDownList[index].value%>">
+                            <%= dropDownList[index].name %>
+                        </option>
+                        <% } %>
+                </select>
+            </div>
+            <div class="controls">
+                <select id="country-control" onchange="handleHtmx()" class="active">
+                    <option value="IN">India</option>
+                    <option value="US">United States</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="AU">Australia</option>
+                </select>
+                <select id="period-control" onchange="handleHtmx()" class="active">
+                    <option value="day">Today</option>
+                    <option value="week">This Week</option>
+                </select>
+            </div>
+        </div>
+        <div id="content" hx-indicator="#loader" hx-trigger="load"      hx-swap="innerHTML" hx-on::before-request="this.innerHTML = ''"></div>
+        <span id="loader" class="loader"></span>
+    </div>
+
+    <%- include("../partials/footer.ejs") %>

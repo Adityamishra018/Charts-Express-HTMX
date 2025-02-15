@@ -1,0 +1,24 @@
+<div class="movie-card">
+    <div class="rank"><%= movie.rank %></div>
+    <div class="details">
+        <% if (movie.cover) { %>
+            <img class="cover" src="<%= movie.base + movie.cover %>" referrerpolicy="no-referrer" alt="" width="150" height="180" />
+        <% } %>
+        <div class="metadata">
+            <p class="title">
+                <%= movie.title ?? movie.year %>
+                <a href="https://www.google.com/search?q=<%= ((movie.title ? movie.title : '') +' ' + movie.year).replace(/ /g, '+') %>" target="_blank">
+                    <i class="fa fa-external-link"></i>
+                </a>
+            </p>
+            
+            <% if (movie.title && movie.year) { %>
+            <p class="year"><%= movie.year %></p>
+            <% } %>
+
+            <% if (movie.info) { %>
+            <p class="info"><%= movie.info %></p>
+            <% } %>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,418 @@
+:root{
+    --rank-bg-color-1 :rgba(202, 50, 50, 0.9);
+    --rank-bg-color-2 :rgba(100, 198, 43, 0.9);
+    --rank-bg-color-3 :rgba(167, 170, 31, 0.9);
+    --rank-color : rgb(240, 240, 240);
+    --background-color : rgb(40, 40, 40);
+    --nav-bg-color : rgb(57, 57, 57);
+    --details-text-color : rgb(255, 255, 255);
+    --card-shadow-color : rgba(255, 255, 255, 0.9);
+}
+
+*, *::after, *::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General */
+
+body {
+    background-color: var(--background-color);
+    font-family : "Charlie Text","Segoe UI", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+main {
+    width: 80%;
+    margin-inline: auto;
+
+    .error{
+        margin-block: 1rem;
+        color: var(--rank-color);
+    }
+}
+
+/* Nav */
+
+nav{
+    display: flex;
+    margin-block : 1.5rem;
+    background-color: var(--nav-bg-color);
+    
+    &>ul{
+        display: flex;
+        padding : 0.5rem;
+        gap: 2rem;
+
+        a{
+            text-decoration: none;
+            color: var(--rank-color);
+        }
+
+        li.active::after{
+            content: '';
+            height: 2px;
+            margin-top: 2px;
+            display: block;
+            background-color:  var(--rank-color);
+        }
+    }
+
+    li, ul{
+        list-style: none;
+    }
+}
+
+/* HTMX */
+
+.htmx-request.loader{
+    display:inline-block;
+}
+
+
+/*#region spinner*/
+.loader {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 3px solid;
+    border-color: var(--rank-bg-color-3) var(--rank-bg-color-3) transparent transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+  .loader::after,
+  .loader::before {
+    content: '';  
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border: 3px solid;
+    border-color: transparent transparent var(--rank-bg-color-1) var(--rank-bg-color-1);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: rotationBack 0.5s linear infinite;
+    transform-origin: center center;
+  }
+  .loader::before {
+    width: 32px;
+    height: 32px;
+    border-color: var(--rank-bg-color-2) var(--rank-bg-color-2) transparent transparent;
+    animation: rotation 1.5s linear infinite;
+  }
+      
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  } 
+  @keyframes rotationBack {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(-360deg);
+    }
+  }
+/*#endregion*/
+
+/* Template */
+
+.selectors{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-block: 0/8rem;
+
+    .dropdown{
+        display: flex;
+        flex-basis: 50%;
+        select{
+            width: 100%;
+            height: 2rem;
+        }
+    }
+
+    .controls > input, .controls > select{
+        display: none;
+        border: 0;
+        padding: 0.2rem;
+        border-radius: 3px;
+        height: 2rem;
+
+        &.active{
+            display: initial;
+        }
+    }
+}
+
+
+/* Music */
+.music-card {
+    display: flex;
+    border-radius: 2px;
+    margin-block: 0.5rem;
+    box-shadow: 0.5px 0px 0.5px 1px var(--card-shadow-color);
+
+    .rank {
+        background-color: var(--rank-bg-color-3);
+        display: flex;
+        padding: 0.2rem 0.1rem;
+        width : 5rem;
+        color: var(--rank-color);
+        justify-content: center;
+        align-items: center;
+        font-size: 3rem;
+        font-weight: bold;
+    }
+
+    &:first-child .rank {
+        background-color: var(--rank-bg-color-1)
+    }
+
+    &:nth-child(2) .rank {
+        background-color: var(--rank-bg-color-2)
+    }
+
+    .details {
+        display: flex;
+        padding-inline: 0.3rem;
+        color : var(--details-text-color);
+
+        .metadata {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            gap: 0.2rem;
+
+            .title {
+                font-size: 1.4rem;
+                font-weight: bold;
+
+                a{
+                    text-decoration: none;
+                    color: var(--details-text-color);
+                    font-size: 0.8rem;
+                }
+            }
+
+            .artist {
+                font-size: 1rem;
+            }
+
+            .info{
+                font-size: 0.8rem;
+            }
+        }
+
+        img {
+            display: inline-block;
+            vertical-align: text-bottom;
+        }
+    }
+}
+
+/* Movie */
+
+.movie-card {
+    display: flex;
+    border-radius: 2px;
+    margin-block: 0.5rem;
+    box-shadow: 0.5px 0px 0.5px 1px var(--card-shadow-color);
+
+    .rank {
+        background-color: var(--rank-bg-color-3);
+        display: flex;
+        padding: 0.2rem 0.1rem;
+        width : 5rem;
+        color: var(--rank-color);
+        justify-content: center;
+        align-items: center;
+        font-size: 3rem;
+        font-weight: bold;
+    }
+
+    &:first-child .rank {
+        background-color: var(--rank-bg-color-1)
+    }
+
+    &:nth-child(2) .rank {
+        background-color: var(--rank-bg-color-2)
+    }
+
+    .details {
+        display: flex;
+        padding-inline: 0.3rem;
+        color : var(--details-text-color);
+
+        .metadata {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            gap: 0.2rem;
+
+            .title {
+                font-size: 1.4rem;
+                font-weight: bold;
+
+                a{
+                    text-decoration: none;
+                    color: var(--details-text-color);
+                    font-size: 0.8rem;
+                }
+            }
+
+            .artist {
+                font-size: 1rem;
+            }
+
+            .info{
+                font-size: 0.8rem;
+            }
+        }
+
+        img {
+            display: inline-block;
+            vertical-align: text-bottom;
+        }
+    }
+}
+
+/* Responsive */
+
+@media screen and (max-width: 720px) {
+    main {
+        width: 95%;
+    }
+}
+
+@media screen and (max-width: 550px) {
+    main {
+        width: 100%;
+        padding: 2px;
+    }
+
+    .music-card{
+        .details{
+            position: relative;
+            flex-basis: 100%;
+            img {
+                position: absolute;
+                right: 10%;
+                top: 15%;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+            }
+
+            .metadata{
+                padding: 2px;
+
+                .title{
+                    font-size: 0.8rem;
+                }
+                .artist{
+                    font-size: 0.6rem;
+                }
+                .info{
+                    font-size: 0.4rem;
+                }
+            }
+        }
+    }
+
+    .movie-card{
+        .details{
+            position: relative;
+            flex-basis: 100%;
+            img {
+                position: absolute;
+                right: 10%;
+                top: 15%;
+                width: 35px;
+                height: 40px;
+                border-radius: 50%;
+            }
+
+            .metadata{
+                padding: 2px;
+
+                .title{
+                    font-size: 0.8rem;
+                }
+                .artist{
+                    font-size: 0.6rem;
+                }
+                .info{
+                    font-size: 0.4rem;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 320px) {
+    main {
+        width: 100%;
+        padding: 2px;
+    }
+
+    .music-card{
+        .details{
+            img {
+                display: none;
+            }
+
+            .metadata{
+                padding: 2px;
+                .title{
+                    font-size: 1rem;
+                }
+                .artist{
+                    font-size: 0.8rem;
+                }
+
+                .info{
+                    font-size: 0.6rem;
+                }
+            }
+        }
+    }
+
+    .movie-card{
+        .details{
+            img {
+                display: none;
+            }
+
+            .metadata{
+                padding: 2px;
+                .title{
+                    font-size: 1rem;
+                }
+                .artist{
+                    font-size: 0.8rem;
+                }
+
+                .info{
+                    font-size: 0.6rem;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,105 @@
+<%- include("../partials/header.ejs", {nav}) %>
+    <div>
+        <script>
+            function seedRandomSource(){
+                const selectElement = document.getElementById("name")
+                const options = selectElement.options;
+                const randomIndex = Math.floor(Math.random() * options.length);
+                selectElement.selectedIndex = randomIndex;
+            }
+
+            function refreshControls() {
+                const selectElement = document.getElementById("name")
+                const selectedOption = selectElement.options[selectElement.selectedIndex];
+
+                if (selectedOption.dataset.showDatePicker === "true")
+                    document.getElementById("date-control").classList.add('active');
+                else
+                    document.getElementById("date-control").classList.remove('active');
+
+                if (selectedOption.dataset.showYearPicker === "true")
+                    document.getElementById("year-control").classList.add('active');
+                else
+                    document.getElementById("year-control").classList.remove('active');
+
+                if (selectedOption.dataset.showPeriodPicker === "true")
+                    document.getElementById("period-control").classList.add('active');
+                else
+                    document.getElementById("period-control").classList.remove('active');
+
+                if (selectedOption.dataset.showCountryPicker === "true")
+                    document.getElementById("country-control").classList.add('active');
+                else
+                    document.getElementById("country-control").classList.remove('active');
+            }
+
+            function handleHtmx() {
+                const selectElement = document.getElementById("name")
+                const name = selectElement.value
+                const source = selectElement.options[selectElement.selectedIndex].dataset.source;
+
+                let year = document.querySelector('#year-control.active')?.value
+                let date = document.querySelector('#date-control.active')?.value
+                let period = document.querySelector('#period-control.active')?.value
+                let country = document.querySelector('#country-control.active')?.value
+
+                document.getElementById('content')
+                    .setAttribute('hx-get',
+                     `/music/list/${source}?name=${name}&date=${date}&year=${year}&period=${period}&country=${country}`)
+
+                htmx.process(document.getElementById('content'))
+                htmx.trigger('#content', 'load')
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                seedRandomSource();
+                refreshControls();
+                handleHtmx();
+            });
+        </script>
+
+        <div class="selectors">
+            <div class="dropdown">
+                <select onchange="refreshControls();handleHtmx()" id="name" name="name">
+                    <% for( let index=0; index < dropDownList.length; index++ ) { %>
+                        <option data-source="<%= dropDownList[index].source %>"
+                            data-show-date-picker="<%= dropDownList[index].showDatePicker ?? "false"%>"
+                            data-show-year-picker="<%= dropDownList[index].showYearPicker ?? "false"%>"
+                            data-show-country-picker="<%= dropDownList[index].showCountryPicker ?? "false"%>"
+                            data-show-period-picker="<%= dropDownList[index].showPeriodPicker ?? "false"%>"
+                            value="<%= dropDownList[index].value%>">
+                            <%= dropDownList[index].name %>
+                        </option>
+                        <% } %>
+                </select>
+            </div>
+            <div class="controls">
+                <select id="year-control" onchange="handleHtmx()" name="year" class="active">
+                    <% for( let index=(new Date()).getFullYear(); index>= (new Date()).getFullYear() - 50; index-- ) { %>
+                        <option value="<%= index %>">
+                            <%= index %>
+                        </option>
+                    <% } %>
+                </select>
+                <input id="date-control" onchange="handleHtmx()" type="date" class="active"
+                    max="<%= new Date().toISOString().split('T')[0]%>"
+                    value="<%= new Date().toISOString().split('T')[0]%>" name="date">
+                <select id="country-control" onchange="handleHtmx()" class="active">
+                    <option value="in">India</option>
+                    <option value="us">United States</option>
+                    <option value="uk">United Kingdom</option>
+                    <option value="au">Australia</option>
+                    <option value="pk">Pakistan</option>
+                    <option value="global">Global</option>
+                </select>
+                <select id="period-control" onchange="handleHtmx()" class="active">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                </select>
+            </div>
+        </div>
+        <div id="content" hx-indicator="#loader" hx-trigger="load"      hx-swap="innerHTML" hx-on::before-request="this.innerHTML = ''"></div>
+        <span id="loader" class="loader"></span>
+    </div>
+
+    <%- include("../partials/footer.ejs") %>

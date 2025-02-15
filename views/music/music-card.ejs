@@ -1,0 +1,24 @@
+<div class="music-card">
+    <div class="rank"><%= music.rank %></div>
+    <div class="details">
+        <% if (music.cover) { %>
+            <img class="cover" src="<%= music.cover %>" referrerpolicy="no-referrer" alt="" width="150" height="150" />
+        <% } %>
+        <div class="metadata">
+            <p class="title">
+                <%= music.title ?? music.artist %>
+                <a href="https://www.youtube.com/results?search_query=<%= ((music.title ? music.title : '') +' ' + music.artist).replace(/ /g, '+') %>" target="_blank">
+                    <i class="fa fa-external-link"></i>
+                </a>
+            </p>
+            
+            <% if (music.title && music.artist) { %>
+            <p class="artist"><%= music.artist %></p>
+            <% } %>
+
+            <% if (music.info) { %>
+            <p class="info"><%= music.info %></p>
+            <% } %>
+        </div>
+    </div>
+</div>
