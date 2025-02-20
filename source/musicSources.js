@@ -12,6 +12,5 @@ export const musicSources = [
     {name: 'Spotify | Kworb', value: 'spotify', source: 'kworb', showPeriodPicker: true, showCountryPicker: true},
     {name: 'Youtube Most Viewed Daily | Kworb', value: 'youtube', source: 'kworb'},
     {name: 'Youtube Most Viewed Daily - English | Kworb', value: 'youtube-realtime_anglo.html', source: 'kworb'},
+    {name: 'Top Trending | Last.fm', value: 'lastfm', source: 'lastfm'},
 ]
-
-/* last.fm */

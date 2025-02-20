@@ -1,6 +1,7 @@
 import { movieSources    } from "../source/movieSources.js";
 import { catchAsync } from "../utils/catchAsync.js";
 import { MovieDb } from "moviedb-promise";
+import { getRTData } from "../scrappers/rottenTomatoes.js"
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -17,6 +18,23 @@ export const getTmdbChart = catchAsync(async (req,res)=>{
     res.render('movie/movie-list.ejs', { movieList })
 })
 
+export const getRTCharts = catchAsync(async (req,res)=>{
+    const source = req.query.name;
+    let movieList = await getRTData(source);
+    res.render('movie/movie-list.ejs', { movieList })
+})
+
+
+export const getSources = catchAsync(async (_, res) => {
+    const dropDownList = movieSources
+    const nav = {
+        isMusic : false, 
+        isMovie : true
+    }
+    res.render('movie/movie.ejs', { dropDownList, nav})
+})
+
+//#region Helpers
 async function getMovieChart(chart,req){
     const country = req.query.country;
     const data = []
@@ -79,12 +97,4 @@ async function getTrendingChart(chart,req){
     return data;
 }
 
-
-export const getSources = catchAsync(async (_, res) => {
-    const dropDownList = movieSources
-    const nav = {
-        isMusic : false, 
-        isMovie : true
-    }
-    res.render('movie/movie.ejs', { dropDownList, nav})
-})
+//#endregion 

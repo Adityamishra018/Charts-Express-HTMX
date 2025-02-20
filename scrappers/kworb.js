@@ -2,20 +2,20 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import moment from "moment";
 
-const KWORG_BASE_URL = 'https://kworb.net';
-const KWORG_YOUTUBE_URL = `${KWORG_BASE_URL}/youtube`;
-const KWORG_SPOTIFY_URL = `${KWORG_BASE_URL}/spotify/country`;
+const KWORB_BASE_URL = 'https://kworb.net';
+const KWORB_YOUTUBE_URL = `${KWORB_BASE_URL}/youtube`;
+const KWORB_SPOTIFY_URL = `${KWORB_BASE_URL}/spotify/country`;
 
 export async function kworbScrapper(name='youtube', chart='', period='daily', country='global') {
     let url;
     if (name === 'youtube'){
-        url = `${KWORG_YOUTUBE_URL}/${chart}`;
+        url = `${KWORB_YOUTUBE_URL}/${chart}`;
         return await getYoutubeData(url);
     }
     else if (name === 'spotify'){
         if(country === 'uk')
             country = 'gb';
-        url = `${KWORG_SPOTIFY_URL}/${country}_${period}.html`;
+        url = `${KWORB_SPOTIFY_URL}/${country}_${period}.html`;
         return await getSpotifyData(url);
     }
 }

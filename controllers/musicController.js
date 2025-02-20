@@ -1,8 +1,9 @@
 import { getChart } from "billboard-top-100";
 import { musicSources } from "../source/musicSources.js";
 import { catchAsync } from "../utils/catchAsync.js";
-import { getGivenOrLastSaturdayToISO, PopulateCovers } from "../utils/util.js";
+import { getGivenOrLastSaturdayToISO } from "../utils/util.js";
 import { kworbScrapper } from "../scrappers/kworb.js";
+import { getLastFMData } from "../scrappers/lastFm.js";
 
 export const getBillboardChart = catchAsync(async (req,res)=>{
     const listName  = req.query.name ?? 'hot-100';
@@ -37,7 +38,15 @@ export const getkworbChart = catchAsync(async (req,res)=>{
     }
 })
 
-
+export const getLastFMChart = catchAsync(async (req,res)=>{
+    try{
+        var list = await getLastFMData();
+        res.render('music/music-list.ejs', { musicList : list })
+    }
+    catch (err){
+        throw err;
+    }
+})
 
 export const getSources = catchAsync(async (req, res) => {
     const dropDownList = musicSources
