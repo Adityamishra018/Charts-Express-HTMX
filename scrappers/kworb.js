@@ -1,6 +1,5 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import moment from "moment";
 
 const KWORB_BASE_URL = 'https://kworb.net';
 const KWORB_YOUTUBE_URL = `${KWORB_BASE_URL}/youtube`;

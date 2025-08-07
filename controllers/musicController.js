@@ -1,4 +1,4 @@
-import { getChart } from "billboard-top-100";
+import { scrapeBillboardChart } from "../scrappers/billboard.js";
 import { musicSources } from "../source/musicSources.js";
 import { catchAsync } from "../utils/catchAsync.js";
 import { getGivenOrLastSaturdayToISO } from "../utils/util.js";
@@ -8,44 +8,21 @@ import { getLastFMData } from "../scrappers/lastFm.js";
 export const getBillboardChart = catchAsync(async (req,res)=>{
     const listName  = req.query.name ?? 'hot-100';
     const chartDate = getGivenOrLastSaturdayToISO(req.query.date ?? new Date());
-
-    getChart(listName, chartDate, (err, data) => {
-        if (err) 
-            throw err;
-
-        const musicList = data.songs.map(d => {
-            return {
-                rank : d.rank,
-                title : d.title,
-                artist : d.artist,
-                cover : d.cover
-            }
-        })
-        res.render('music/music-list.ejs', { musicList })
-    })
+    let list = await scrapeBillboardChart(listName, chartDate)
+    res.render('music/music-list.ejs', { musicList : list })
 })
 
 export const getkworbChart = catchAsync(async (req,res)=>{
     const [name, chart]  = req.query.name.split('-');
     const period = req.query.period;
     const country = req.query.country;
-    try{
-        var list = await kworbScrapper(name, chart, period, country);
-        res.render('music/music-list.ejs', { musicList : list })
-    }
-    catch (err){
-        throw err;
-    }
+    let list = await kworbScrapper(name, chart, period, country);
+    res.render('music/music-list.ejs', { musicList : list })
 })
 
 export const getLastFMChart = catchAsync(async (req,res)=>{
-    try{
-        var list = await getLastFMData();
-        res.render('music/music-list.ejs', { musicList : list })
-    }
-    catch (err){
-        throw err;
-    }
+    let list = await getLastFMData();
+    res.render('music/music-list.ejs', { musicList : list })
 })
 
 export const getSources = catchAsync(async (req, res) => {
